@@ -10,7 +10,7 @@ namespace EmployeeManagement.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class EmployeeController : ControllerBase
     {
         private readonly IEmployeeRepository employeeRepository;
@@ -31,7 +31,7 @@ namespace EmployeeManagement.Controllers
         }
 
         [HttpGet("GetEmployeeList")]
-        //[Authorize(Roles = "Employee")]
+        [Authorize(Roles = "Employee, Manager, Admin")]
         public async Task<IEnumerable<EmployeeDTO>> GetEmployeeList() 
         {
             var employees = await employeeRepository.GetEmployeeListAsync();
@@ -40,7 +40,7 @@ namespace EmployeeManagement.Controllers
 
 
         [HttpGet("GetEmployeeById")]
-       // [Authorize(Roles = "Manager, Admin")]
+        [Authorize(Roles = "Manager, Admin")]
         public async Task<IActionResult> GetEmployeesById(Int64 id)
         {
             var employee = await employeeRepository.GetEmployeeByIdAsync(id);
@@ -49,7 +49,7 @@ namespace EmployeeManagement.Controllers
 
 
         [HttpPost("AddEmployee")]
-       // [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddEmployee(AddEmployeeDTO addEmployeeDTO)
         {
             var employee = await employeeRepository.AddEmployeeAsync(addEmployeeDTO);
@@ -58,7 +58,7 @@ namespace EmployeeManagement.Controllers
 
 
         [HttpPut("UpdateEmployee")]
-        //[Authorize(Roles = "Manager, Admin")]
+        [Authorize(Roles = "Manager, Admin")]
         public async Task<IActionResult> UpdateEmployee(Int64 id, UpdateEmployeeDTO updateEmployeeDTO)
         {
             var employee = await employeeRepository.UpdateEmployeeByIdAsync(id, updateEmployeeDTO);
@@ -67,7 +67,7 @@ namespace EmployeeManagement.Controllers
 
 
         [HttpDelete("DeleteEmployee")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteEmployee(Int64 id)
         {
             var employee = await employeeRepository.DeleteEmployeeByIdAsync(id);
