@@ -132,11 +132,36 @@ namespace EmployeeManagement.IRepository.Repository
             }
         }
 
-        public async Task<IEnumerable<EmployeeDTO>> GetEmployeeListAsync()
+        public async Task<IEnumerable<EmployeeDTO>> GetEmployeeListAsync(string? name, string? state,
+                                                                         string? department, string? job, string? city)
         {    
             try
             {
-                var result = await dbContext.Employees.Include(x=> x.State).ToListAsync();
+                var query = dbContext.Employees
+                    .Include(x => x.State)
+                    .Include(x => x.City)
+                    .Include(x => x.Department)
+                    .Include(x => x.Job)
+                    .AsQueryable();
+
+                // Apply filters only if values are provided
+
+                if (!String.IsNullOrWhiteSpace(name))
+                    query = query.Where(x => x.Name.ToLower().Contains(name.ToLower()));
+
+                if (!String.IsNullOrWhiteSpace(state))
+                    query = query.Where(x => x.State != null && x.State.StateName.ToLower().Contains(state.ToLower()));
+
+                if (!string.IsNullOrWhiteSpace(department))
+                    query = query.Where(x => x.Department != null && x.Department.DepartmentName.ToLower().Contains(department.ToLower()));
+
+                if (!string.IsNullOrWhiteSpace(job))
+                    query = query.Where(x => x.Job != null && x.Job.JobTitle.ToLower().Contains(job.ToLower()));
+
+                if (!string.IsNullOrWhiteSpace(city))
+                    query = query.Where(x => x.City != null && x.City.CityName.ToLower().Contains(city.ToLower()));
+
+                var result = await query.ToListAsync();
                 IEnumerable<EmployeeDTO> res = result.Select(item => new EmployeeDTO
                 {
                     EmployeeId = item.EmployeeId,
