@@ -5,7 +5,8 @@ namespace EmployeeManagement.IRepository
 {
     public interface IEmployeeRepository
     {
-        public Task<IEnumerable<EmployeeDTO>> GetEmployeeListAsync();
+        public Task<IEnumerable<EmployeeDTO>> GetEmployeeListAsync(string? name, string? state,
+        string? department, string? job, string? city);
         public Task<EmployeeDTO?> GetEmployeeByIdAsync(Int64 id);
         public Task<AddEmployeeDTO> AddEmployeeAsync(AddEmployeeDTO addEmployeeDTO);
         public Task<UpdateEmployeeDTO?> UpdateEmployeeByIdAsync(Int64 id, UpdateEmployeeDTO updateEmployeeDTO);

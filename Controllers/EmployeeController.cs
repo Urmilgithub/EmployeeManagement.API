@@ -31,10 +31,14 @@ namespace EmployeeManagement.Controllers
         }
 
         [HttpGet("GetEmployeeList")]
-        [Authorize(Roles = "Employee, Manager, Admin")]
-        public async Task<IEnumerable<EmployeeDTO>> GetEmployeeList() 
+        //[Authorize(Roles = "Employee, Manager, Admin")]
+        public async Task<IEnumerable<EmployeeDTO>> GetEmployeeList([FromQuery] string? name,
+                                                                    [FromQuery] string? state,
+                                                                    [FromQuery] string? department,
+                                                                    [FromQuery] string? job,
+                                                                    [FromQuery] string? city) 
         {
-            var employees = await employeeRepository.GetEmployeeListAsync();
+            var employees = await employeeRepository.GetEmployeeListAsync(name, state, department, job, city);
             return employees;
         }
 
