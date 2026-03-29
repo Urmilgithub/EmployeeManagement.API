@@ -36,9 +36,12 @@ namespace EmployeeManagement.Controllers
                                                                     [FromQuery] string? state,
                                                                     [FromQuery] string? department,
                                                                     [FromQuery] string? job,
-                                                                    [FromQuery] string? city) 
+                                                                    [FromQuery] string? city,
+                                                                    [FromQuery] string? sortOrder,
+                                                                    [FromQuery] string? sortBy 
+                                                                    ) 
         {
-            var employees = await employeeRepository.GetEmployeeListAsync(name, state, department, job, city);
+            var employees = await employeeRepository.GetEmployeeListAsync(name, state, department, job, city, sortOrder, sortBy);
             return employees;
         }
 

@@ -133,7 +133,9 @@ namespace EmployeeManagement.IRepository.Repository
         }
 
         public async Task<IEnumerable<EmployeeDTO>> GetEmployeeListAsync(string? name, string? state,
-                                                                         string? department, string? job, string? city)
+                                                                         string? department, string? job, 
+                                                                         string? city, string? sortOrder,
+                                                                         string? sortBy)
         {    
             try
             {
@@ -160,6 +162,22 @@ namespace EmployeeManagement.IRepository.Repository
 
                 if (!string.IsNullOrWhiteSpace(city))
                     query = query.Where(x => x.City != null && x.City.CityName.ToLower().Contains(city.ToLower()));
+
+
+
+                // Sorting
+
+                bool isDesc = String.Equals(sortOrder, "desc", StringComparison.OrdinalIgnoreCase);
+                query = sortBy?.ToLower() switch
+                {
+
+                    "Salary" => isDesc ? query.OrderByDescending(x => x.Salary) : query.OrderBy(x => x.Salary),
+
+                    "JoinDate" => isDesc ? query.OrderByDescending(x => x.JoinDate) : query.OrderBy(x => x.JoinDate),
+
+                    _ => query // NO sorting of soryBy is null
+                };
+
 
                 var result = await query.ToListAsync();
                 IEnumerable<EmployeeDTO> res = result.Select(item => new EmployeeDTO
