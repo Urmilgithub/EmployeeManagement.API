@@ -32,16 +32,17 @@ namespace EmployeeManagement.Controllers
 
         [HttpGet("GetEmployeeList")]
         //[Authorize(Roles = "Employee, Manager, Admin")]
-        public async Task<IEnumerable<EmployeeDTO>> GetEmployeeList([FromQuery] string? name,
+        public async Task<PaginatedResultDTO<EmployeeDTO>> GetEmployeeList([FromQuery] string? name,
                                                                     [FromQuery] string? state,
                                                                     [FromQuery] string? department,
                                                                     [FromQuery] string? job,
                                                                     [FromQuery] string? city,
                                                                     [FromQuery] string? sortOrder,
-                                                                    [FromQuery] string? sortBy 
+                                                                    [FromQuery] string? sortBy,
+                                                                    [FromQuery] int page =1
                                                                     ) 
         {
-            var employees = await employeeRepository.GetEmployeeListAsync(name, state, department, job, city, sortOrder, sortBy);
+            var employees = await employeeRepository.GetEmployeeListAsync(name, state, department, job, city, sortOrder, sortBy, page);
             return employees;
         }
 

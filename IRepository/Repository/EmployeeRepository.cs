@@ -13,7 +13,6 @@ namespace EmployeeManagement.IRepository.Repository
             dbContext = _dbContext;
         }
 
-
         public async Task<AddEmployeeDTO> AddEmployeeAsync(AddEmployeeDTO addEmployeeDTO)
         {
             try
@@ -132,13 +131,17 @@ namespace EmployeeManagement.IRepository.Repository
             }
         }
 
-        public async Task<IEnumerable<EmployeeDTO>> GetEmployeeListAsync(string? name, string? state,
+        public async Task<PaginatedResultDTO<EmployeeDTO>> GetEmployeeListAsync(string? name, string? state,
                                                                          string? department, string? job, 
                                                                          string? city, string? sortOrder,
-                                                                         string? sortBy)
-        {    
+                                                                         string? sortBy, int page = 1)
+        {
+
             try
             {
+                const int pageSize = 10;
+
+
                 var query = dbContext.Employees
                     .Include(x => x.State)
                     .Include(x => x.City)
@@ -179,7 +182,18 @@ namespace EmployeeManagement.IRepository.Repository
                 };
 
 
-                var result = await query.ToListAsync();
+                // pagination
+
+                int totalCount = await query.CountAsync();
+                int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize); 
+
+
+                var result = await query
+                            .Skip((page -1) * pageSize)
+                            .Take(pageSize)
+                            .ToListAsync();
+
+
                 IEnumerable<EmployeeDTO> res = result.Select(item => new EmployeeDTO
                 {
                     EmployeeId = item.EmployeeId,
@@ -195,7 +209,17 @@ namespace EmployeeManagement.IRepository.Repository
                     JobTitle = item.Job?.JobTitle
                 }).ToList();
 
-                return res;
+                return new PaginatedResultDTO<EmployeeDTO>
+                {
+                    Items = res,
+                    TotalCount = totalCount,
+                    TotalPages = totalPages,
+                    PageNumber = page,
+                    PageSize = pageSize,
+
+                };
+
+               // return res;
             }
             catch (Exception)
             {
