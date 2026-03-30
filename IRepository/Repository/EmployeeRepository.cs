@@ -13,7 +13,6 @@ namespace EmployeeManagement.IRepository.Repository
             dbContext = _dbContext;
         }
 
-
         public async Task<AddEmployeeDTO> AddEmployeeAsync(AddEmployeeDTO addEmployeeDTO)
         {
             try
