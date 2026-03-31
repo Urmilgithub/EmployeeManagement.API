@@ -1,6 +1,7 @@
 using EmployeeManagement.Data;
 using EmployeeManagement.IRepository;
 using EmployeeManagement.IRepository.Repository;
+using EmployeeManagement.Mapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -60,6 +61,9 @@ builder.Services.AddScoped<IJobRepository, JobRepository>();
 builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 builder.Services.AddScoped<ITokenHandlerRepository, TokenHandlerRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+
+builder.Services.AddAutoMapper(typeof(MapperProfiles));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
