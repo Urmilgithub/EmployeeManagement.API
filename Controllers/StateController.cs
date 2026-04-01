@@ -17,7 +17,7 @@ namespace EmployeeManagement.Controllers
             stateRepository = _stateRepository;
         }
 
-        [HttpGet("GetStateList")]
+        [HttpGet]
         public async Task<IEnumerable<StateDTO>> GetStateList()
         {
             var State = await stateRepository.GetStateListAsync();

@@ -1,4 +1,5 @@
-﻿using EmployeeManagement.Data;
+﻿using AutoMapper;
+using EmployeeManagement.Data;
 using EmployeeManagement.Model.Domain;
 using EmployeeManagement.Model.DTO;
 using Microsoft.EntityFrameworkCore;
@@ -8,49 +9,55 @@ namespace EmployeeManagement.IRepository.Repository
     public class EmployeeRepository : IEmployeeRepository
     {
         private readonly ApplicationDbContext dbContext;
-        public EmployeeRepository(ApplicationDbContext _dbContext)
+        private readonly IMapper mapper;
+
+        public EmployeeRepository(ApplicationDbContext _dbContext, IMapper _mapper)
         {
             dbContext = _dbContext;
+            mapper = _mapper;
         }
 
         public async Task<AddEmployeeDTO> AddEmployeeAsync(AddEmployeeDTO addEmployeeDTO)
         {
             try
             {
-                var employee = new Employee
-                {
-                    Name = addEmployeeDTO.Name,
-                    Email = addEmployeeDTO.Email,
-                    Gender = addEmployeeDTO.Gender,
-                    Contact = addEmployeeDTO.Contact,
-                    Salary = addEmployeeDTO.Salary,
-                    JoinDate = addEmployeeDTO.JoinDate,
-                    DepartmentId = addEmployeeDTO.DepartmentId,
-                    StateId = addEmployeeDTO.StateId,
-                    JobId = addEmployeeDTO.JobId,
-                    CityId = addEmployeeDTO.CityId
-                };
+                //var employee = new Employee
+                //{
+                //    Name = addEmployeeDTO.Name,
+                //    Email = addEmployeeDTO.Email,
+                //    Gender = addEmployeeDTO.Gender,
+                //    Contact = addEmployeeDTO.Contact,
+                //    Salary = addEmployeeDTO.Salary,
+                //    JoinDate = addEmployeeDTO.JoinDate,
+                //    DepartmentId = addEmployeeDTO.DepartmentId,
+                //    StateId = addEmployeeDTO.StateId,
+                //    JobId = addEmployeeDTO.JobId,
+                //    CityId = addEmployeeDTO.CityId
+                //};
+
+                var employee = mapper.Map<Employee>(addEmployeeDTO);
 
                 await dbContext.Employees.AddAsync(employee);
                 await dbContext.SaveChangesAsync();
 
-                var addemployeeDTO = new EmployeeDTO
-                {
-                    EmployeeId = employee.EmployeeId,
-                    Name = employee.Name,
-                    Email = employee.Email,
-                    Gender = employee.Gender,
-                    Contact = employee.Contact,
-                    Salary = employee.Salary,
-                    JoinDate = employee.JoinDate,
-                    DepartmentId = employee.DepartmentId,
-                    StateId = employee.StateId,
-                    JobId = employee.JobId,
-                    CityId = employee.CityId
-                };
+                //var addemployeeDTO = new EmployeeDTO
+                //{
+                //    EmployeeId = employee.EmployeeId,
+                //    Name = employee.Name,
+                //    Email = employee.Email,
+                //    Gender = employee.Gender,
+                //    Contact = employee.Contact,
+                //    Salary = employee.Salary,
+                //    JoinDate = employee.JoinDate,
+                //    DepartmentId = employee.DepartmentId,
+                //    StateId = employee.StateId,
+                //    JobId = employee.JobId,
+                //    CityId = employee.CityId
+                //};
 
                 // Reload with related data
                 var addedEmployee = await GetEmployeeByIdAsync(employee.EmployeeId);
+                
                 return addEmployeeDTO;
             }
             catch (Exception)
@@ -69,6 +76,8 @@ namespace EmployeeManagement.IRepository.Repository
                 {
                     // Get employee data before deletion
                     var employeeDTO = await GetEmployeeByIdAsync(id);
+
+                    mapper.Map<EmployeeDTO>(employeeDomain);
 
                     dbContext.Employees.Remove(employeeDomain);
                     await dbContext.SaveChangesAsync();
@@ -101,22 +110,22 @@ namespace EmployeeManagement.IRepository.Repository
 
                 if (employeeDomain != null)
                 {
-                    var response = new EmployeeDTO
-                    {
-                        EmployeeId = employeeDomain.EmployeeId,
-                        Name = employeeDomain.Name,
-                        Email = employeeDomain.Email,
-                        Gender = employeeDomain.Gender,
-                        Contact = employeeDomain.Contact,
-                        Salary = employeeDomain.Salary,
-                        JoinDate = employeeDomain.JoinDate,
-                        StateName = employeeDomain.State != null ? employeeDomain.State.StateName : null,
-                        CityName = employeeDomain.City.CityName,
-                        DepartmentName = employeeDomain.Department.DepartmentName,
-                        JobTitle = employeeDomain.Job.JobTitle
-                    };
+                    //var response = new EmployeeDTO
+                    //{
+                    //    EmployeeId = employeeDomain.EmployeeId,
+                    //    Name = employeeDomain.Name,
+                    //    Email = employeeDomain.Email,
+                    //    Gender = employeeDomain.Gender,
+                    //    Contact = employeeDomain.Contact,
+                    //    Salary = employeeDomain.Salary,
+                    //    JoinDate = employeeDomain.JoinDate,
+                    //    StateName = employeeDomain.State != null ? employeeDomain.State.StateName : null,
+                    //    CityName = employeeDomain.City.CityName,
+                    //    DepartmentName = employeeDomain.Department.DepartmentName,
+                    //    JobTitle = employeeDomain.Job.JobTitle
+                    //};
 
-                    return response;
+                    return mapper.Map<EmployeeDTO>(employeeDomain);
                 }
                 else
                 {
@@ -174,9 +183,9 @@ namespace EmployeeManagement.IRepository.Repository
                 query = sortBy?.ToLower() switch
                 {
 
-                    "Salary" => isDesc ? query.OrderByDescending(x => x.Salary) : query.OrderBy(x => x.Salary),
+                    "salary" => isDesc ? query.OrderByDescending(x => x.Salary) : query.OrderBy(x => x.Salary),
 
-                    "JoinDate" => isDesc ? query.OrderByDescending(x => x.JoinDate) : query.OrderBy(x => x.JoinDate),
+                    "joindate" => isDesc ? query.OrderByDescending(x => x.JoinDate) : query.OrderBy(x => x.JoinDate),
 
                     _ => query // NO sorting of soryBy is null
                 };
@@ -207,7 +216,9 @@ namespace EmployeeManagement.IRepository.Repository
                     CityName = item.City?.CityName,
                     DepartmentName = item.Department?.DepartmentName,
                     JobTitle = item.Job?.JobTitle
+
                 }).ToList();
+
 
                 return new PaginatedResultDTO<EmployeeDTO>
                 {
@@ -235,16 +246,8 @@ namespace EmployeeManagement.IRepository.Repository
 
                 if (employeeDomain != null)
                 {
-                    employeeDomain.Name = updateEmployeeDTO.Name;
-                    employeeDomain.Email = updateEmployeeDTO.Email;
-                    employeeDomain.Gender = updateEmployeeDTO.Gender;
-                    employeeDomain.Contact = updateEmployeeDTO.Contact;
-                    employeeDomain.Salary = updateEmployeeDTO.Salary;
-                    employeeDomain.JoinDate = updateEmployeeDTO.JoinDate;
-                    employeeDomain.DepartmentId = updateEmployeeDTO.DepartmentId;
-                    employeeDomain.StateId = updateEmployeeDTO.StateId;
-                    employeeDomain.JobId = updateEmployeeDTO.JobId;
-                    employeeDomain.CityId = updateEmployeeDTO.CityId;
+                    
+                    mapper.Map(updateEmployeeDTO, employeeDomain);
 
                     dbContext.Employees.Update(employeeDomain);
                     await dbContext.SaveChangesAsync();
