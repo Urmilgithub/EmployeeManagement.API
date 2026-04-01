@@ -9,7 +9,12 @@ namespace EmployeeManagement.Mapper
         public MapperProfiles()
         {
             // Employee Mapping
-            CreateMap<Employee, EmployeeDTO>().ReverseMap();
+            CreateMap<Employee, EmployeeDTO>()
+                .ForMember(dest => dest.StateName, opt => opt.MapFrom(src => src.State != null ? src.State.StateName : null))
+                .ForMember(dest => dest.CityName, opt => opt.MapFrom(src => src.City != null ? src.City.CityName : null))
+                .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department != null ? src.Department.DepartmentName : null))
+                .ForMember(dest => dest.JobTitle, opt => opt.MapFrom(src => src.Job != null ? src.Job.JobTitle : null));
+
             CreateMap<AddEmployeeDTO, Employee>().ReverseMap();
             CreateMap<UpdateEmployeeDTO, Employee>().ReverseMap();
 
