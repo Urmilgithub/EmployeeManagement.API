@@ -3,6 +3,7 @@ using EmployeeManagement.Data;
 using EmployeeManagement.Model.Domain;
 using EmployeeManagement.Model.DTO;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace EmployeeManagement.IRepository.Repository
 {
@@ -57,7 +58,7 @@ namespace EmployeeManagement.IRepository.Repository
 
                 // Reload with related data
                 var addedEmployee = await GetEmployeeByIdAsync(employee.EmployeeId);
-                
+
                 return addEmployeeDTO;
             }
             catch (Exception)
@@ -131,7 +132,7 @@ namespace EmployeeManagement.IRepository.Repository
                 {
                     return null;
                 }
-                
+
             }
             catch (Exception)
             {
@@ -141,7 +142,7 @@ namespace EmployeeManagement.IRepository.Repository
         }
 
         public async Task<PaginatedResultDTO<EmployeeDTO>> GetEmployeeListAsync(string? name, string? state,
-                                                                         string? department, string? job, 
+                                                                         string? department, string? job,
                                                                          string? city, string? sortOrder,
                                                                          string? sortBy, int page = 1)
         {
@@ -194,43 +195,42 @@ namespace EmployeeManagement.IRepository.Repository
                 // pagination
 
                 int totalCount = await query.CountAsync();
-                int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize); 
+                int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
 
                 var result = await query
-                            .Skip((page -1) * pageSize)
+                            .Skip((page - 1) * pageSize)
                             .Take(pageSize)
                             .ToListAsync();
 
 
-                IEnumerable<EmployeeDTO> res = result.Select(item => new EmployeeDTO
-                {
-                    EmployeeId = item.EmployeeId,
-                    Name = item.Name,
-                    Email = item.Email,
-                    Gender = item.Gender,
-                    Contact = item.Contact,
-                    Salary = item.Salary,
-                    JoinDate = item.JoinDate,
-                    StateName = item.State?.StateName,
-                    CityName = item.City?.CityName,
-                    DepartmentName = item.Department?.DepartmentName,
-                    JobTitle = item.Job?.JobTitle
+                //IEnumerable<EmployeeDTO> res = result.Select(item => new EmployeeDTO
+                //{
+                //    EmployeeId = item.EmployeeId,
+                //    Name = item.Name,
+                //    Email = item.Email,
+                //    Gender = item.Gender,
+                //    Contact = item.Contact,
+                //    Salary = item.Salary,
+                //    JoinDate = item.JoinDate,
+                //    StateName = item.State?.StateName,
+                //    CityName = item.City?.CityName,
+                //    DepartmentName = item.Department?.DepartmentName,
+                //    JobTitle = item.Job?.JobTitle
 
-                }).ToList();
+                //}).ToList();
 
 
                 return new PaginatedResultDTO<EmployeeDTO>
                 {
-                    Items = res,
+                    Items = mapper.Map<IEnumerable<EmployeeDTO>>(result),
                     TotalCount = totalCount,
                     TotalPages = totalPages,
                     PageNumber = page,
                     PageSize = pageSize,
-
                 };
 
-               // return res;
+                // return res;
             }
             catch (Exception)
             {
@@ -246,7 +246,7 @@ namespace EmployeeManagement.IRepository.Repository
 
                 if (employeeDomain != null)
                 {
-                    
+
                     mapper.Map(updateEmployeeDTO, employeeDomain);
 
                     dbContext.Employees.Update(employeeDomain);
