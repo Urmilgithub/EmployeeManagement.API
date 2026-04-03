@@ -22,39 +22,11 @@ namespace EmployeeManagement.IRepository.Repository
         {
             try
             {
-                //var employee = new Employee
-                //{
-                //    Name = addEmployeeDTO.Name,
-                //    Email = addEmployeeDTO.Email,
-                //    Gender = addEmployeeDTO.Gender,
-                //    Contact = addEmployeeDTO.Contact,
-                //    Salary = addEmployeeDTO.Salary,
-                //    JoinDate = addEmployeeDTO.JoinDate,
-                //    DepartmentId = addEmployeeDTO.DepartmentId,
-                //    StateId = addEmployeeDTO.StateId,
-                //    JobId = addEmployeeDTO.JobId,
-                //    CityId = addEmployeeDTO.CityId
-                //};
-
                 var employee = mapper.Map<Employee>(addEmployeeDTO);
 
                 await dbContext.Employees.AddAsync(employee);
                 await dbContext.SaveChangesAsync();
 
-                //var addemployeeDTO = new EmployeeDTO
-                //{
-                //    EmployeeId = employee.EmployeeId,
-                //    Name = employee.Name,
-                //    Email = employee.Email,
-                //    Gender = employee.Gender,
-                //    Contact = employee.Contact,
-                //    Salary = employee.Salary,
-                //    JoinDate = employee.JoinDate,
-                //    DepartmentId = employee.DepartmentId,
-                //    StateId = employee.StateId,
-                //    JobId = employee.JobId,
-                //    CityId = employee.CityId
-                //};
 
                 // Reload with related data
                 var addedEmployee = await GetEmployeeByIdAsync(employee.EmployeeId);
@@ -111,20 +83,6 @@ namespace EmployeeManagement.IRepository.Repository
 
                 if (employeeDomain != null)
                 {
-                    //var response = new EmployeeDTO
-                    //{
-                    //    EmployeeId = employeeDomain.EmployeeId,
-                    //    Name = employeeDomain.Name,
-                    //    Email = employeeDomain.Email,
-                    //    Gender = employeeDomain.Gender,
-                    //    Contact = employeeDomain.Contact,
-                    //    Salary = employeeDomain.Salary,
-                    //    JoinDate = employeeDomain.JoinDate,
-                    //    StateName = employeeDomain.State != null ? employeeDomain.State.StateName : null,
-                    //    CityName = employeeDomain.City.CityName,
-                    //    DepartmentName = employeeDomain.Department.DepartmentName,
-                    //    JobTitle = employeeDomain.Job.JobTitle
-                    //};
 
                     return mapper.Map<EmployeeDTO>(employeeDomain);
                 }
@@ -218,7 +176,7 @@ namespace EmployeeManagement.IRepository.Repository
                 //    DepartmentName = item.Department?.DepartmentName,
                 //    JobTitle = item.Job?.JobTitle
 
-                //}).ToList();
+                //}).ToList(); 
 
 
                 return new PaginatedResultDTO<EmployeeDTO>
