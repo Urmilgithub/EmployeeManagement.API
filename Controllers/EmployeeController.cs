@@ -10,7 +10,7 @@ namespace EmployeeManagement.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class EmployeeController : ControllerBase
     {
         private readonly IEmployeeRepository employeeRepository;
@@ -31,7 +31,7 @@ namespace EmployeeManagement.Controllers
         }
 
         [HttpGet("GetEmployeeList")]
-        //[Authorize(Roles = "Employee, Manager, Admin")]
+        [Authorize(Roles = "Employee, Manager, Admin")]
         public async Task<PaginatedResultDTO<EmployeeDTO>> GetEmployeeList([FromQuery] string? name,
                                                                     [FromQuery] string? state,
                                                                     [FromQuery] string? department,
@@ -48,7 +48,7 @@ namespace EmployeeManagement.Controllers
 
 
         [HttpGet("GetEmployeeById")]
-        //[Authorize(Roles = "Manager, Admin")]
+        [Authorize(Roles = "Manager, Admin")]
         public async Task<IActionResult> GetEmployeesById(Int64 id)
         {
             var employee = await employeeRepository.GetEmployeeByIdAsync(id);
@@ -57,7 +57,7 @@ namespace EmployeeManagement.Controllers
 
 
         [HttpPost("AddEmployee")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddEmployee(AddEmployeeDTO addEmployeeDTO)
         {
             var employee = await employeeRepository.AddEmployeeAsync(addEmployeeDTO);
@@ -66,7 +66,7 @@ namespace EmployeeManagement.Controllers
 
 
         [HttpPut("UpdateEmployee")]
-        //[Authorize(Roles = "Manager, Admin")]
+        [Authorize(Roles = "Manager, Admin")]
         public async Task<IActionResult> UpdateEmployee(Int64 id, UpdateEmployeeDTO updateEmployeeDTO)
         {
             var employee = await employeeRepository.UpdateEmployeeByIdAsync(id, updateEmployeeDTO);
@@ -75,7 +75,7 @@ namespace EmployeeManagement.Controllers
 
 
         [HttpDelete("DeleteEmployee")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteEmployee(Int64 id)
         {
             var employee = await employeeRepository.DeleteEmployeeByIdAsync(id);
@@ -96,15 +96,6 @@ namespace EmployeeManagement.Controllers
             return Ok(result);
         }
 
-
-        //public Task<List<SelectItem>> GetCitiesByStateAsync(int stateId)
-        //    => http.GetFromJsonAsync<List<SelectItem>>(
-        //           $"api/cities/bystate/{stateId}")
-        //       ?? Task.FromResult(new List<SelectItem>());
-
-        //public Task<List<SelectItem>> GetDepartmentsAsync()
-        //    => http.GetFromJsonAsync<List<SelectItem>>("api/departments")
-        //       ?? Task.FromResult(new List<SelectItem>());
     }
 
 }
