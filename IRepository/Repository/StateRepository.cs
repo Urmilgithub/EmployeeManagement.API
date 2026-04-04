@@ -8,10 +8,12 @@ namespace EmployeeManagement.IRepository.Repository
     public class StateRepository : IStateRepository
     {
         private readonly ApplicationDbContext dbContext;
+        private readonly IMapper mapper;
 
-        public StateRepository(ApplicationDbContext _dbContext)
+        public StateRepository(ApplicationDbContext _dbContext, IMapper _mapper)
         {
             dbContext = _dbContext;
+            mapper = _mapper;
         }
 
 
@@ -19,10 +21,7 @@ namespace EmployeeManagement.IRepository.Repository
         {
             try
             {
-                var state = new State
-                {
-                    StateName = addStateDTO.StateName,
-                };
+                var state = mapper.Map<State>(addStateDTO);
 
                 await dbContext.States.AddAsync(state);
                 await dbContext.SaveChangesAsync();
@@ -67,12 +66,8 @@ namespace EmployeeManagement.IRepository.Repository
                 var stateDomain = await dbContext.States.FirstOrDefaultAsync(x => x.StateId == id);
                 if (stateDomain != null)
                 {
-                    var response = new StateDTO
-                    {
-                        StateId = stateDomain.StateId,
-                        StateName = stateDomain.StateName,
-                    };
 
+                    var response = mapper.Map<StateDTO>(stateDomain);
                     return response;
                 }            
                 else
@@ -115,11 +110,13 @@ namespace EmployeeManagement.IRepository.Repository
                 var stateDomain = await dbContext.States.FirstOrDefaultAsync(x => x.StateId == id);
                 if (stateDomain != null)
                 {
-                    stateDomain.StateName = updateStateDTO.StateName;
+                    mapper.Map(updateStateDTO, stateDomain);
 
                     dbContext.Update(stateDomain);
                     await dbContext.SaveChangesAsync();
-                    return updateStateDTO;
+
+                    return mapper.Map<StateDTO>(stateDomain);
+
                 }
                 else
                 {
