@@ -1,4 +1,5 @@
-﻿using EmployeeManagement.Data;
+﻿using AutoMapper;
+using EmployeeManagement.Data;
 using EmployeeManagement.Model.Domain;
 using EmployeeManagement.Model.DTO;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +18,7 @@ namespace EmployeeManagement.IRepository.Repository
         }
 
 
-        public async Task<AddStateDTO> AddStateAsync(AddStateDTO addStateDTO)
+        public async Task<StateDTO> AddStateAsync(AddStateDTO addStateDTO)
         {
             try
             {
@@ -25,8 +26,10 @@ namespace EmployeeManagement.IRepository.Repository
 
                 await dbContext.States.AddAsync(state);
                 await dbContext.SaveChangesAsync();
+
                 var addedData = await GetStateByIdAsync(state.StateId);
-                return addStateDTO;
+
+                return mapper.Map<StateDTO>(state);
             }
             catch (Exception)
             {
@@ -103,7 +106,7 @@ namespace EmployeeManagement.IRepository.Repository
 
         }
 
-        public async Task<UpdateStateDTO?> UpdateStateByIdAsync(long id, UpdateStateDTO updateStateDTO)
+        public async Task<StateDTO?> UpdateStateByIdAsync(long id, UpdateStateDTO updateStateDTO)
         {
             try
             {
