@@ -17,7 +17,7 @@ namespace EmployeeManagement.IRepository.Repository
         }
 
 
-        public async Task<AddDepartmentDTO> AddDepartmentAsync(AddDepartmentDTO addDepartmentDTO)
+        public async Task<DepartmentDTO> AddDepartmentAsync(AddDepartmentDTO addDepartmentDTO)
         {
             try
             {
@@ -32,7 +32,7 @@ namespace EmployeeManagement.IRepository.Repository
 
                 // Get New Data Added
                 var addeddepartment = await GetDepartmentByIdAsync(department.DepartmentId);
-                return addDepartmentDTO;
+                return addeddepartment;
             }
             catch (Exception)
             {
@@ -114,7 +114,7 @@ namespace EmployeeManagement.IRepository.Repository
             }
         }
 
-        public async Task<UpdateDepartmentDTO?> UpdateDepartmentByIdAsync(long id, UpdateDepartmentDTO updateDepartmentDTO)
+        public async Task<DepartmentDTO?> UpdateDepartmentByIdAsync(long id, UpdateDepartmentDTO updateDepartmentDTO)
         {
             try
             {
@@ -127,8 +127,8 @@ namespace EmployeeManagement.IRepository.Repository
                     dbContext.Departments.Update(departmentDomain);
                     await dbContext.SaveChangesAsync();
 
-                    var updatedData = await GetDepartmentByIdAsync(id);
-                    return updateDepartmentDTO;
+                    var updatedDepartment = await GetDepartmentByIdAsync(id);
+                    return updatedDepartment;
                 }
                 else
                 {
