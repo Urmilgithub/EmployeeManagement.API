@@ -14,7 +14,7 @@ namespace EmployeeManagement.IRepository.Repository
             dbContext = _dbContext;
         }
 
-        public async Task<AddCityDTO> AddCityAsync(AddCityDTO addCityDTO)
+        public async Task<CityDTO> AddCityAsync(AddCityDTO addCityDTO)
         {
             try
             {
@@ -29,7 +29,7 @@ namespace EmployeeManagement.IRepository.Repository
 
                 // Reload Data for added city 
                 var addedcity = await GetCityByIdAsync(city.CityId);
-                return addCityDTO;
+                return addedcity;
             }
             catch (Exception)
             {
@@ -115,7 +115,7 @@ namespace EmployeeManagement.IRepository.Repository
             }
         }
 
-        public async Task<UpdateCityDTO?> UpdateCityByIdAsync(long id, UpdateCityDTO updateCityDTO)
+        public async Task<CityDTO?> UpdateCityByIdAsync(long id, UpdateCityDTO updateCityDTO)
         {
             try
             {
@@ -131,7 +131,7 @@ namespace EmployeeManagement.IRepository.Repository
                     // Get Updated Data 
                     var updatedcity = await GetCityByIdAsync(id);
 
-                    return updateCityDTO;
+                    return updatedcity;
                 }
                 else
                 {
