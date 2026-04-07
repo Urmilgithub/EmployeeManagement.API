@@ -1,4 +1,5 @@
-﻿using EmployeeManagement.Data;
+﻿using AutoMapper;
+using EmployeeManagement.Data;
 using EmployeeManagement.Model.Domain;
 using EmployeeManagement.Model.DTO;
 using Microsoft.EntityFrameworkCore;
@@ -8,27 +9,26 @@ namespace EmployeeManagement.IRepository.Repository
     public class CityRepository: ICityRepository
     {
         private readonly ApplicationDbContext dbContext;
+        private readonly IMapper mapper;
 
-        public CityRepository(ApplicationDbContext _dbContext)
+        public CityRepository(ApplicationDbContext _dbContext, IMapper _mapper)
         {
             dbContext = _dbContext;
+            mapper = _mapper;
         }
 
         public async Task<CityDTO> AddCityAsync(AddCityDTO addCityDTO)
         {
             try
             {
-                var city = new City
-                {
-                    CityName = addCityDTO.CityName,
-                    StateId = addCityDTO.StateId
-                };
+                var city = mapper.Map<City>(addCityDTO);
 
                 await dbContext.Cities.AddAsync(city);
                 await dbContext.SaveChangesAsync();
 
                 // Reload Data for added city 
                 var addedcity = await GetCityByIdAsync(city.CityId);
+
                 return addedcity;
             }
             catch (Exception)
@@ -45,12 +45,8 @@ namespace EmployeeManagement.IRepository.Repository
                 var cityDomain = await dbContext.Cities.FirstOrDefaultAsync(x => x.CityId == id);
                 if(cityDomain != null)
                 {
-                    var response = new CityDTO
-                    {
-                        CityId = cityDomain.CityId,
-                        CityName = cityDomain.CityName,
-                        StateId = cityDomain.StateId
-                    };
+
+                    var response = mapper.Map<CityDTO>(cityDomain);
 
                     return response;
                 }
@@ -77,8 +73,11 @@ namespace EmployeeManagement.IRepository.Repository
                     // Get City Data Before Deletion
                     var cityDTO = await GetCityByIdAsync(id);
 
+                    mapper.Map<CityDTO>(cityDomain);
+
                     dbContext.Cities.Remove(cityDomain);
                     await dbContext.SaveChangesAsync();
+
                     return cityDTO;
                 }
                 else
@@ -97,7 +96,9 @@ namespace EmployeeManagement.IRepository.Repository
         {
             try
             {
-                var cityDomain = await dbContext.Cities.Select(x => new CityDTO
+                var cityDomain = await dbContext.Cities
+                    .Include(x => x.State)
+                    .Select(x => new CityDTO
                 {
                         CityId = x.CityId,
                         CityName = x.CityName,
@@ -106,7 +107,8 @@ namespace EmployeeManagement.IRepository.Repository
                 }).ToListAsync();
 
 
-                return cityDomain;
+                return mapper.Map<IEnumerable<CityDTO>>(cityDomain);
+
             }
             catch (Exception)
             {
@@ -122,8 +124,8 @@ namespace EmployeeManagement.IRepository.Repository
                 var cityDomain = await dbContext.Cities.FindAsync(id);
                 if (cityDomain != null)
                 {
-                    cityDomain.CityName = updateCityDTO.CityName;
-                    cityDomain.StateId = updateCityDTO.StateId;
+
+                    mapper.Map(cityDomain, updateCityDTO);
 
                     dbContext.Update(cityDomain);
                     await dbContext.SaveChangesAsync();
