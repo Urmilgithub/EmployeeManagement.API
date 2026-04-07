@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EmployeeManagement.Model.Domain
 {
@@ -11,5 +12,8 @@ namespace EmployeeManagement.Model.Domain
         public Decimal MaxSalary { get; set;}
 
         public long? DepartmentId { get; set; }
+
+        [ForeignKey("DepartmentId")]
+        public Department? Department { get; set; }
     }
 }
