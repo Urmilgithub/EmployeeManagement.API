@@ -15,7 +15,6 @@ namespace EmployeeManagement.Mapper
                 .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department != null ? src.Department.DepartmentName : null))
                 .ForMember(dest => dest.JobTitle, opt => opt.MapFrom(src => src.Job != null ? src.Job.JobTitle : null));
 
-
             CreateMap<AddEmployeeDTO, Employee>().ReverseMap();
             CreateMap<UpdateEmployeeDTO, Employee>().ReverseMap();
 
@@ -25,6 +24,9 @@ namespace EmployeeManagement.Mapper
             CreateMap<AddStateDTO,State>().ReverseMap();
             CreateMap<UpdateStateDTO, State>().ReverseMap();
 
+            //City Mapping
+            //CreateMap<City, CityDTO>()
+            //    .ForMember(dest => dest.StateName, opt => opt.MapFrom(src => src.sta))
         }
     }
 }
