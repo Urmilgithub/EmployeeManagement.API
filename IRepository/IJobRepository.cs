@@ -7,8 +7,8 @@ namespace EmployeeManagement.IRepository
     {
         public Task<IEnumerable<JobDTO>> GetJobListAsync();
         public Task<JobDTO?> GetJobByIdAsync(Int64 id);
-        public Task<AddJobDTO> AddJobAsync(AddJobDTO addJobDTO);
-        public Task<UpdateJobDTO?> UpdateJobByIdAsync(Int64 id, UpdateJobDTO updateJobDTO);
+        public Task<JobDTO> AddJobAsync(AddJobDTO addJobDTO);
+        public Task<JobDTO?> UpdateJobByIdAsync(Int64 id, UpdateJobDTO updateJobDTO);
         public Task<JobDTO?> DeleteJobByIdAsync(Int64 id);
     }
 }
