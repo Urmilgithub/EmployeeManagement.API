@@ -15,7 +15,7 @@ namespace EmployeeManagement.IRepository.Repository
         }
 
 
-        public async Task<AddJobDTO> AddJobAsync(AddJobDTO addJobDTO)
+        public async Task<JobDTO> AddJobAsync(AddJobDTO addJobDTO)
         {
             try
             {
@@ -29,8 +29,8 @@ namespace EmployeeManagement.IRepository.Repository
 
                 await dbContext.Jobs.AddAsync(job);
                 await dbContext.SaveChangesAsync();
-                var addedData = await GetJobByIdAsync(job.JobId);
-                return addJobDTO;
+                var addedJob = await GetJobByIdAsync(job.JobId);
+                return addedJob;
             }
             catch (Exception)
             {
@@ -117,7 +117,7 @@ namespace EmployeeManagement.IRepository.Repository
             }
         }
 
-        public async Task<UpdateJobDTO?> UpdateJobByIdAsync(long id, UpdateJobDTO updateJobDTO)
+        public async Task<JobDTO?> UpdateJobByIdAsync(long id, UpdateJobDTO updateJobDTO)
         {
             try
             {
@@ -131,8 +131,8 @@ namespace EmployeeManagement.IRepository.Repository
 
                     dbContext.Entry(jobDomain).CurrentValues.SetValues(jobDomain);
                     await dbContext.SaveChangesAsync();
-                    var updatedData = await GetJobByIdAsync(id);
-                    return updateJobDTO;
+                    var updateJob = await GetJobByIdAsync(id);
+                    return updateJob;
                 }
                 else
                 {
