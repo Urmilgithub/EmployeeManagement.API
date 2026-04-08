@@ -1,4 +1,5 @@
-﻿using Azure;
+﻿using AutoMapper;
+using Azure;
 using EmployeeManagement.Data;
 using EmployeeManagement.Model.Domain;
 using EmployeeManagement.Model.DTO;
@@ -10,10 +11,12 @@ namespace EmployeeManagement.IRepository.Repository
     public class DepartmentRepository: IDepartmentRepository
     {
         private readonly ApplicationDbContext dbContext;
+        private readonly IMapper mapper;
 
-        public DepartmentRepository(ApplicationDbContext _dbContext)
+        public DepartmentRepository(ApplicationDbContext _dbContext, IMapper _mapper)
         {
             dbContext = _dbContext;
+            mapper = _mapper;
         }
 
 
@@ -21,17 +24,15 @@ namespace EmployeeManagement.IRepository.Repository
         {
             try
             {
-                var department = new Department
-                {
-                    DepartmentName = addDepartmentDTO.DepartmentName,
-                    CityId = addDepartmentDTO.CityId,
-                };
+
+                var department = mapper.Map<Department>(addDepartmentDTO);
 
                 await dbContext.Departments.AddAsync(department);
                 await dbContext.SaveChangesAsync();
 
                 // Get New Data Added
                 var addeddepartment = await GetDepartmentByIdAsync(department.DepartmentId);
+
                 return addeddepartment;
             }
             catch (Exception)
@@ -49,7 +50,10 @@ namespace EmployeeManagement.IRepository.Repository
                 if (departmentDomain != null)
                 {
                     var department = await GetDepartmentByIdAsync(id);
+
                     dbContext.Departments.Remove(departmentDomain);
+                    await dbContext.SaveChangesAsync();
+
                     return department;
                 }
                 else
@@ -69,15 +73,14 @@ namespace EmployeeManagement.IRepository.Repository
         {
             try
             {
-                var departmentDomain = await dbContext.Departments.FindAsync(id);
+                var departmentDomain = await dbContext.Departments
+                                    .Include(x => x.City)
+                                    .FirstOrDefaultAsync(x => x.DepartmentId == id);
+
                 if (departmentDomain != null)
                 {
-                    var response = new DepartmentDTO
-                    {
-                        DepartmentId = departmentDomain.DepartmentId,
-                        DepartmentName = departmentDomain.DepartmentName,
-                        CityId = departmentDomain.CityId
-                    };
+
+                    var response = mapper.Map<DepartmentDTO>(departmentDomain);
 
                     return response;
                 }
@@ -98,14 +101,16 @@ namespace EmployeeManagement.IRepository.Repository
         {
             try
             {
-                var departmentDomain = await dbContext.Departments.Select(x => new DepartmentDTO
+                var departmentDomain = await dbContext.Departments
+                    .Include(x => x.City)
+                    .Select(x => new DepartmentDTO
                 {
                     DepartmentName = x.DepartmentName,
-                    CityId = x.CityId
+                    CityName = x.City != null ? x.City.CityName : null
 
                 }).ToListAsync();
 
-                return departmentDomain;
+                return mapper.Map<IEnumerable<DepartmentDTO>>(departmentDomain);
             }
             catch (Exception)
             {
@@ -119,10 +124,11 @@ namespace EmployeeManagement.IRepository.Repository
             try
             {
                 var departmentDomain = await dbContext.Departments.FirstOrDefaultAsync(x => x.DepartmentId == id);
+
                 if (departmentDomain != null)
                 {
-                    departmentDomain.DepartmentName = updateDepartmentDTO.DepartmentName;
-                    departmentDomain.CityId = updateDepartmentDTO.CityId;
+
+                    mapper.Map(updateDepartmentDTO, departmentDomain);
 
                     dbContext.Departments.Update(departmentDomain);
                     await dbContext.SaveChangesAsync();
