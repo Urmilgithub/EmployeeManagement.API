@@ -7,7 +7,8 @@ namespace EmployeeManagement.Mapper
     public class MapperProfiles: Profile
     {
         public MapperProfiles()
-        {
+        { 
+
             // Employee Mapping
             CreateMap<Employee, EmployeeDTO>()
                 .ForMember(dest => dest.StateName, 
@@ -44,16 +45,16 @@ namespace EmployeeManagement.Mapper
                     opt => opt.MapFrom(src => src.City != null ? src.City.CityName : null));
 
             CreateMap<AddDepartmentDTO, Department>().ReverseMap();
-            CreateMap<UpdateCityDTO, Department>().ReverseMap();
+            CreateMap<UpdateDepartmentDTO, Department>().ReverseMap();
 
 
             // Job Mapping
             CreateMap<Job, JobDTO>()
-                .ForMember(dest => dest.JobTitle,
+                .ForMember(dest => dest.DepartmentName,
                     opt => opt.MapFrom(src => src.Department != null ? src.Department.DepartmentName : null));
 
-            CreateMap<AddDepartmentDTO, Department>().ReverseMap();
-            CreateMap<UpdateCityDTO, Department>().ReverseMap();
+            CreateMap<AddJobDTO, Job>().ReverseMap();
+            CreateMap<UpdateJobDTO, Job>().ReverseMap();
         }
     }
 }

@@ -8,5 +8,6 @@
         public Decimal MaxSalary { get; set; }
 
         public long? DepartmentId { get; set; }
+        public string? DepartmentName {  get; set; }
     }
 }
