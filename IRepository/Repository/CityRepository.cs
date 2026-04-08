@@ -102,10 +102,9 @@ namespace EmployeeManagement.IRepository.Repository
                 {
                         CityId = x.CityId,
                         CityName = x.CityName,
-                        StateId = x.StateId
+                        StateName = x.State != null ? x.State.StateName : null,
 
                 }).ToListAsync();
-
 
                 return mapper.Map<IEnumerable<CityDTO>>(cityDomain);
 
@@ -125,7 +124,7 @@ namespace EmployeeManagement.IRepository.Repository
                 if (cityDomain != null)
                 {
 
-                    mapper.Map(cityDomain, updateCityDTO);
+                    mapper.Map(updateCityDTO, cityDomain);
 
                     dbContext.Update(cityDomain);
                     await dbContext.SaveChangesAsync();
