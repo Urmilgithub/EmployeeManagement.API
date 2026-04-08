@@ -12,3 +12,4 @@ namespace EmployeeManagement.IRepository
         public Task<JobDTO?> DeleteJobByIdAsync(Int64 id);
     }
 }
+ 
