@@ -73,8 +73,6 @@ namespace EmployeeManagement.IRepository.Repository
                     // Get City Data Before Deletion
                     var cityDTO = await GetCityByIdAsync(id);
 
-                    mapper.Map<CityDTO>(cityDomain);
-
                     dbContext.Cities.Remove(cityDomain);
                     await dbContext.SaveChangesAsync();
 
@@ -96,13 +94,12 @@ namespace EmployeeManagement.IRepository.Repository
         {
             try
             {
-                var cityDomain = await dbContext.Cities
-                    .Include(x => x.State)
+                var cityDomain = await dbContext.Cities.Include(x => x.State)
                     .Select(x => new CityDTO
                 {
                         CityId = x.CityId,
                         CityName = x.CityName,
-                        StateName = x.State != null ? x.State.StateName : null,
+                        StateName = x.State != null ? x.State.StateName : null
 
                 }).ToListAsync();
 
