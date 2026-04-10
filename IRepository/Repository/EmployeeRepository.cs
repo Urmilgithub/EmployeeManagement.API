@@ -44,7 +44,7 @@ namespace EmployeeManagement.IRepository.Repository
         {
             try
             {
-                var employeeDomain = await dbContext.Employees.FirstOrDefaultAsync(x => x.EmployeeId == id);
+                var employeeDomain = await dbContext.Employees.FirstOrDefaultAsync(x => x.EmployeeId == id && !x.IsDeleted && x.IsActive);
                 if (employeeDomain != null)
                 {
                     // Get employee data before deletion
@@ -52,7 +52,10 @@ namespace EmployeeManagement.IRepository.Repository
 
                     mapper.Map<EmployeeDTO>(employeeDomain);
 
-                    dbContext.Employees.Remove(employeeDomain);
+                    //dbContext.Employees.Remove(employeeDomain);
+                    employeeDomain.IsDeleted = true;
+                    employeeDomain.IsActive = false;
+                    employeeDomain.DeletedAt = DateTime.UtcNow;
                     await dbContext.SaveChangesAsync();
 
                     return employeeDTO;
@@ -79,7 +82,7 @@ namespace EmployeeManagement.IRepository.Repository
                     .Include(e => e.State)
                     .Include(e => e.City)
                     .Include(e => e.Job)
-                    .FirstOrDefaultAsync(x => x.EmployeeId == id);
+                    .FirstOrDefaultAsync(x => x.EmployeeId == id && !x.IsDeleted && x.IsActive);
 
                 if (employeeDomain != null)
                 {
@@ -115,6 +118,7 @@ namespace EmployeeManagement.IRepository.Repository
                     .Include(x => x.City)
                     .Include(x => x.Department)
                     .Include(x => x.Job)
+                    .Where(x => !x.IsDeleted && x.IsActive)
                     .AsQueryable();
 
                 // Apply filters only if values are provided
@@ -201,7 +205,7 @@ namespace EmployeeManagement.IRepository.Repository
             try
             {
                 var employeeDomain = await dbContext.Employees
-                    .FirstOrDefaultAsync(x => x.EmployeeId == id);
+                    .FirstOrDefaultAsync(x => x.EmployeeId == id && !x.IsDeleted && x.IsActive);
 
                 if (employeeDomain != null)
                 {
