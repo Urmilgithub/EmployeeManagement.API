@@ -200,7 +200,8 @@ namespace EmployeeManagement.IRepository.Repository
         {
             try
             {
-                var employeeDomain = await dbContext.Employees.FindAsync(id);
+                var employeeDomain = await dbContext.Employees
+                    .FirstOrDefaultAsync(x => x.EmployeeId == id);
 
                 if (employeeDomain != null)
                 {
