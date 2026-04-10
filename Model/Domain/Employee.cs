@@ -14,6 +14,10 @@ namespace EmployeeManagement.Model.Domain
         public Decimal Salary { get; set; }
         public DateTime JoinDate { get; set; }
 
+        public bool IsDeleted { get; set; }
+        public bool IsActive { get; set; }
+        public DateTime? DeletedAt { get; set; }
+
         public long? StateId { get; set; }
 
         [ForeignKey("StateId")]

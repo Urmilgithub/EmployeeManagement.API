@@ -11,6 +11,7 @@ namespace EmployeeManagement.Model.DTO
         public int Contact { get; set; }
         public Decimal Salary { get; set; }
         public DateTime JoinDate { get; set; }
+        public bool IsActive {  get; set; }
 
 
         public long? StateId { get; set; }
