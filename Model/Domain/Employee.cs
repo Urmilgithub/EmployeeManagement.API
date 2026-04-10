@@ -16,7 +16,7 @@ namespace EmployeeManagement.Model.Domain
 
         public bool IsDeleted { get; set; } = false;
         public bool IsActive { get; set; } = true;
-        public DateTime? DeletedAt { get; set; }
+        public DateTime? DeletedAt { get; set; } = null;
 
         public long? StateId { get; set; }
 
