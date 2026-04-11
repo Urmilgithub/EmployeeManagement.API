@@ -15,16 +15,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy("AllowAngularApp",
-//        policy =>
-//        {
-//            policy.WithOrigins("http://localhost:4200") // Angular app URL
-//                  .AllowAnyHeader()
-//                  .AllowAnyMethod();
-//        });
-//});
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularApp",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:4200") // Angular app URL
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(option =>
@@ -41,7 +41,7 @@ builder.Services.AddSwaggerGen(option =>
         {
             Id = JwtBearerDefaults.AuthenticationScheme,
             Type = ReferenceType.SecurityScheme,
-        }
+        } 
     };
 
     option.AddSecurityDefinition(securityScheme.Reference.Id, securityScheme);
@@ -90,7 +90,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-//app.UseCors("AllowAngularApp");
+app.UseCors("AllowAngularApp");
 
 app.UseAuthentication();
 app.UseAuthorization();
