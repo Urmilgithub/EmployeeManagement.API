@@ -18,5 +18,6 @@ employee records, departments, and organizational hierarchy.
 - Department, City, State, and Job management
 - Role-based access control ([Authorize(Roles="Admin")])
 - Soft delete (IsDeleted flag — records never hard deleted)
+- Active/Inactive status management using IsActive
 - Global exception handling with structured error responses
 - Swagger UI with Bearer token input for easy testing
