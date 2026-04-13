@@ -21,3 +21,16 @@ employee records, departments, and organizational hierarchy.
 - Active/Inactive status management using IsActive
 - Global exception handling with structured error responses
 - Swagger UI with Bearer token input for easy testing
+
+## API Endpoints
+
+| Method | Route | Auth | Description |
+|--------|-------|------|-------------|
+| POST | /api/auth/login | Public | Login, returns JWT token |
+| GET | /api/employees | Required | Get all employees (filter/sort/page) |
+| GET | /api/employees/{id} | Required | Get employee by ID |
+| POST | /api/employees | Admin | Create new employee |
+| PUT | /api/employees/{id} | Admin | Update employee |
+| DELETE | /api/employees/{id} | Admin | Soft delete employee |
+| GET | /api/departments | Required | Get all departments |
+| GET | /api/jobs | Required | Get all job roles |
