@@ -35,6 +35,28 @@ employee records, departments, and organizational hierarchy.
 | GET | /api/departments | Required | Get all departments |
 | GET | /api/jobs | Required | Get all job roles |
 
+## How to Run
+
+1. Clone the repository
+```
+git clone https://github.com/Urmilgithub/EmployeeManagement.API.git
+```
+2. Update the connection string in `appsettings.json`:
+```json
+"ConnectionStrings": {
+  "DefaultConnection": "Server=YOUR_SERVER;Database=EmployeeDB;Trusted_Connection=true;"
+}
+```
+3. Apply database migrations:
+```
+dotnet ef database update
+```
+4. Run the application:
+```
+dotnet run
+
+
+
 ## Architecture
 
 This project follows a Repository Pattern with Dependency Injection for
