@@ -54,7 +54,26 @@ dotnet ef database update
 4. Run the application:
 ```
 dotnet run
+```
+5. Open Swagger UI: `https://localhost:7xxx/swagger`
 
+
+## Sample Login Request
+
+```json
+POST /api/auth/login
+{
+  "email": "admin@example.com",
+  "password": "Admin@123"
+}
+```
+Response:
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiJ9...",
+  "expiry": "2025-12-31T00:00:00"
+}
+```
 
 
 ## Architecture
