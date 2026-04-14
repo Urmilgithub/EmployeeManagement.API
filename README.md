@@ -9,7 +9,7 @@ employee records, departments, and organizational hierarchy.
 - **Database:** MS SQL Server
 - **Auth:** JWT Bearer Authentication (Role-Based)
 - **Architecture:** Repository Pattern, Dependency Injection
-- **API Docs:** Swagger / OpenAPI with JWT support
+- **API Docs:** Swagger / OpenAPI with JWT support.
 
 ## Features
 
@@ -17,7 +17,7 @@ employee records, departments, and organizational hierarchy.
 - Employee CRUD with filtering, sorting, and pagination
 - Department, City, State, and Job management
 - Role-based access control ([Authorize(Roles="Admin")])
-- Soft delete (IsDeleted flag — records never hard deleted)
+- Soft delete (IsDeleted flag â€” records never hard deleted)
 - Active/Inactive status management using IsActive
 - Global exception handling with structured error responses
 - Swagger UI with Bearer token input for easy testing
