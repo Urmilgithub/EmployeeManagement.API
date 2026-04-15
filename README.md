@@ -9,7 +9,8 @@ employee records, departments, and organizational hierarchy.
 - **Database:** MS SQL Server
 - **Auth:** JWT Bearer Authentication (Role-Based)
 - **Architecture:** Repository Pattern, Dependency Injection
-- **API Docs:** Swagger / OpenAPI with JWT support.
+- **API Docs:** Swagger / OpenAPI with JWT support
+- **Logging:** Serilog
 
 ## Features
 
