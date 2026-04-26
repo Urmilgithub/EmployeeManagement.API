@@ -84,4 +84,4 @@ clean separation of concerns. Each entity (Employee, Department, Job, City,
 State) has its own repository interface and implementation, registered as
 Scoped services in the DI container. JWT secrets and DB connection strings
 are stored in appsettings.json (use Azure App Service Configuration or
-environment variables in production)
+environment variables in production).
