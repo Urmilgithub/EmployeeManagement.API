@@ -1,7 +1,7 @@
 # Employee Management API
 
 A production-grade RESTful Web API built with ASP.NET Core 8 for managing
-employee records, departments, and organizational hierarchy.
+employee records, departments, and organizational hierarchy
 
 ## Tech Stack
 
